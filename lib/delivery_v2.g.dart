@@ -32,9 +32,13 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       shopName: fields[15] as String,
       shopLatitude: fields[16] as double,
       shopLongitude: fields[17] as double,
-      natureOfGoods: fields[20] as String,
-      vehicleType: fields[18] as String,
-      route: fields[19] as String,
+      deliveryLocation: fields[18] as DeliveryLocationV2,
+      vehicleType: fields[19] as String,
+      route: fields[20] as String,
+      natureOfGoods: fields[21] as String,
+      customerContact: fields[22] as String,
+      receiverContact: fields[23] as String,
+      activities: (fields[24] as List)?.cast<DeliveryActivities>(),
       notes: fields[9] as String,
     )
       ..deliveryLatitude = fields[11] as double
@@ -44,7 +48,7 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
   @override
   void write(BinaryWriter writer, DeliveryV2 obj) {
     writer
-      ..writeByte(21)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -82,11 +86,19 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       ..writeByte(17)
       ..write(obj.shopLongitude)
       ..writeByte(18)
-      ..write(obj.vehicleType)
+      ..write(obj.deliveryLocation)
       ..writeByte(19)
-      ..write(obj.route)
+      ..write(obj.vehicleType)
       ..writeByte(20)
-      ..write(obj.natureOfGoods);
+      ..write(obj.route)
+      ..writeByte(21)
+      ..write(obj.natureOfGoods)
+      ..writeByte(22)
+      ..write(obj.customerContact)
+      ..writeByte(23)
+      ..write(obj.receiverContact)
+      ..writeByte(24)
+      ..write(obj.activities);
   }
 
   @override

@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'delivery_location.g.dart';
 
-@HiveType(typeId: 159)
+@HiveType(typeId: 151)
 class DeliveryLocationV2 {
   @HiveField(0)
   final double shopLatitude;
@@ -15,11 +15,11 @@ class DeliveryLocationV2 {
   @HiveField(4)
   final double pickUpLongitude;
   @HiveField(5)
-  final String dropOffLocation;
+  final String destination;
   @HiveField(6)
-  final double dropOffLatitude;
+  final double destinationLatitude;
   @HiveField(7)
-  final double dropOffLongitude;
+  final double destinationLongitude;
   @HiveField(8)
   final String alternativeLocation;
   @HiveField(9)
@@ -27,11 +27,9 @@ class DeliveryLocationV2 {
   @HiveField(10)
   final double alternativeLongitude;
   @HiveField(11)
-  final bool geofence;
+  final bool geofencePickUp;
   @HiveField(12)
-  final String shopName;
-  @HiveField(13)
-  final int deliveryId;
+  final bool geofenceDestination;
 
   DeliveryLocationV2(
       {this.shopLatitude,
@@ -39,53 +37,20 @@ class DeliveryLocationV2 {
       this.pickUpLocation,
       this.pickUpLatitude,
       this.pickUpLongitude,
-      this.dropOffLocation,
-      this.dropOffLatitude,
-      this.dropOffLongitude,
+      this.destination,
+      this.destinationLatitude,
+      this.destinationLongitude,
       this.alternativeLocation,
       this.alternativeLatitude,
       this.alternativeLongitude,
-      this.shopName,
-      this.deliveryId,
-      this.geofence});
+      this.geofencePickUp,
+      this.geofenceDestination});
 
-  factory DeliveryLocationV2.fromJson(Map<String, dynamic> json,
-      {String shopName, int deliveryId}) {
+  factory DeliveryLocationV2.fromMap(Map<String, dynamic> json) {
     try {
-      return DeliveryLocationV2(
-          geofence: true,
-          shopLatitude: json['shop_latitude'] != null
-              ? double.parse(json['shop_latitude'].toString())
-              : null,
-          shopLongitude: json['shop_longitude'] != null &&
-                  json['shop_longitude'].toString().isNotEmpty
-              ? double.parse(json['shop_longitude'].toString())
-              : null,
-          pickUpLocation: json['pickup_location'],
-          pickUpLatitude: json['pickup_latitude'] != null
-              ? double.parse(json['pickup_latitude'].toString())
-              : null,
-          pickUpLongitude: json['pickup_longitude'] != null
-              ? double.parse(json['pickup_longitude'].toString())
-              : null,
-          dropOffLocation: json['dropoff_location'],
-          dropOffLatitude: json['dropoff_latitude'] != null
-              ? double.parse(json['dropoff_latitude'].toString())
-              : null,
-          dropOffLongitude: json['dropoff_longitude'] != null
-              ? double.parse(json['dropoff_longitude'].toString())
-              : null,
-          alternativeLocation: json['alternative_location'],
-          alternativeLatitude: json['alternative_latitude'] != null
-              ? double.parse(json['alternative_latitude'].toString())
-              : null,
-          alternativeLongitude: json['alternative_longitude'] != null
-              ? double.parse(json['alternative_longitude'].toString())
-              : null,
-          shopName: shopName,
-          deliveryId: deliveryId);
-    } catch (e, stack) {
-      throw FormatException('Error parsing delivery location $e $stack', json);
+      return DeliveryLocationV2();
+    } catch (error) {
+      throw FormatException("Error parsing delivery location $error ", json);
     }
   }
 }

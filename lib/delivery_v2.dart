@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:adapter_gen/delivery_activities.dart';
 import 'package:adapter_gen/delivery_document.dart';
+import 'package:adapter_gen/delivery_location.dart';
 import 'package:adapter_gen/delivery_task.dart';
 import 'package:adapter_gen/invoice_delivery_document.dart';
 import 'package:hive/hive.dart';
@@ -48,12 +50,19 @@ class DeliveryV2 {
   @HiveField(17)
   double shopLongitude;
   @HiveField(18)
-  String vehicleType;
+  DeliveryLocationV2 deliveryLocation;
   @HiveField(19)
-  String route;
+  String vehicleType;
   @HiveField(20)
+  String route;
+  @HiveField(21)
   String natureOfGoods;
-
+  @HiveField(22)
+  String customerContact;
+  @HiveField(23)
+  String receiverContact;
+  @HiveField(24)
+  List<DeliveryActivities> activities;
   DeliveryV2(
       {this.id,
       this.tripId,
@@ -70,9 +79,13 @@ class DeliveryV2 {
       this.shopName,
       this.shopLatitude,
       this.shopLongitude,
-      this.natureOfGoods,
+      this.deliveryLocation,
       this.vehicleType,
       this.route,
+      this.natureOfGoods,
+      this.customerContact,
+      this.receiverContact,
+      this.activities,
       this.notes});
 
   factory DeliveryV2.fromMap(
@@ -130,6 +143,10 @@ class DeliveryV2 {
         shopLongitude: shop['slongitude'] != null
             ? double.parse(shop['slongitude'])
             : null,
+        deliveryLocation: DeliveryLocationV2.fromMap(json['delivery_location']),
+        activities: List.from(json['activities'])
+            .map((e) => DeliveryActivities.fromJson(json))
+            .toList(),
       );
     } catch (error) {
       throw FormatException("Error parsing delivery $error ", json);

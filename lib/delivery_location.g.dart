@@ -8,7 +8,7 @@ part of 'delivery_location.dart';
 
 class DeliveryLocationV2Adapter extends TypeAdapter<DeliveryLocationV2> {
   @override
-  final int typeId = 159;
+  final int typeId = 151;
 
   @override
   DeliveryLocationV2 read(BinaryReader reader) {
@@ -22,22 +22,21 @@ class DeliveryLocationV2Adapter extends TypeAdapter<DeliveryLocationV2> {
       pickUpLocation: fields[2] as String,
       pickUpLatitude: fields[3] as double,
       pickUpLongitude: fields[4] as double,
-      dropOffLocation: fields[5] as String,
-      dropOffLatitude: fields[6] as double,
-      dropOffLongitude: fields[7] as double,
+      destination: fields[5] as String,
+      destinationLatitude: fields[6] as double,
+      destinationLongitude: fields[7] as double,
       alternativeLocation: fields[8] as String,
       alternativeLatitude: fields[9] as double,
       alternativeLongitude: fields[10] as double,
-      shopName: fields[12] as String,
-      deliveryId: fields[13] as int,
-      geofence: fields[11] as bool,
+      geofencePickUp: fields[11] as bool,
+      geofenceDestination: fields[12] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, DeliveryLocationV2 obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.shopLatitude)
       ..writeByte(1)
@@ -49,11 +48,11 @@ class DeliveryLocationV2Adapter extends TypeAdapter<DeliveryLocationV2> {
       ..writeByte(4)
       ..write(obj.pickUpLongitude)
       ..writeByte(5)
-      ..write(obj.dropOffLocation)
+      ..write(obj.destination)
       ..writeByte(6)
-      ..write(obj.dropOffLatitude)
+      ..write(obj.destinationLatitude)
       ..writeByte(7)
-      ..write(obj.dropOffLongitude)
+      ..write(obj.destinationLongitude)
       ..writeByte(8)
       ..write(obj.alternativeLocation)
       ..writeByte(9)
@@ -61,11 +60,9 @@ class DeliveryLocationV2Adapter extends TypeAdapter<DeliveryLocationV2> {
       ..writeByte(10)
       ..write(obj.alternativeLongitude)
       ..writeByte(11)
-      ..write(obj.geofence)
+      ..write(obj.geofencePickUp)
       ..writeByte(12)
-      ..write(obj.shopName)
-      ..writeByte(13)
-      ..write(obj.deliveryId);
+      ..write(obj.geofenceDestination);
   }
 
   @override

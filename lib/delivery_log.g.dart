@@ -8,7 +8,7 @@ part of 'delivery_log.dart';
 
 class DeliveryLogAdapter extends TypeAdapter<DeliveryLog> {
   @override
-  final int typeId = 14;
+  final int typeId = 158;
 
   @override
   DeliveryLog read(BinaryReader reader) {
@@ -17,36 +17,38 @@ class DeliveryLogAdapter extends TypeAdapter<DeliveryLog> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return DeliveryLog(
-      tripId: fields[0] as int,
-      deliveryId: fields[1] as int,
+      deliveryId: fields[0] as int,
+      activityId: fields[1] as int,
       latitude: fields[2] as double,
       longitude: fields[3] as double,
-      activityId: fields[4] as int,
-      entryTime: fields[5] as DateTime,
-      synced: fields[6] as bool,
-      id: fields[7] as int,
-    );
+      imagePath: fields[4] as String,
+      comments: fields[5] as String,
+      id: fields[8] as int,
+      entryTime: fields[6] as DateTime,
+    )..synced = fields[7] as bool;
   }
 
   @override
   void write(BinaryWriter writer, DeliveryLog obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
-      ..write(obj.tripId)
-      ..writeByte(1)
       ..write(obj.deliveryId)
+      ..writeByte(1)
+      ..write(obj.activityId)
       ..writeByte(2)
       ..write(obj.latitude)
       ..writeByte(3)
       ..write(obj.longitude)
       ..writeByte(4)
-      ..write(obj.activityId)
+      ..write(obj.imagePath)
       ..writeByte(5)
-      ..write(obj.entryTime)
+      ..write(obj.comments)
       ..writeByte(6)
-      ..write(obj.synced)
+      ..write(obj.entryTime)
       ..writeByte(7)
+      ..write(obj.synced)
+      ..writeByte(8)
       ..write(obj.id);
   }
 
