@@ -38,7 +38,8 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       natureOfGoods: fields[21] as String,
       customerContact: fields[22] as String,
       receiverContact: fields[23] as String,
-      activities: (fields[24] as List)?.cast<DeliveryActivities>(),
+      activities: (fields[24] as List)?.cast<DeliveryActivity>(),
+      receiverName: fields[25] as String,
       notes: fields[9] as String,
     )
       ..deliveryLatitude = fields[11] as double
@@ -48,7 +49,7 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
   @override
   void write(BinaryWriter writer, DeliveryV2 obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(26)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -98,7 +99,9 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       ..writeByte(23)
       ..write(obj.receiverContact)
       ..writeByte(24)
-      ..write(obj.activities);
+      ..write(obj.activities)
+      ..writeByte(25)
+      ..write(obj.receiverName);
   }
 
   @override

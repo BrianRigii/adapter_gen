@@ -7,6 +7,7 @@ import 'package:adapter_gen/delivery_task.dart';
 import 'package:adapter_gen/invoice_delivery_document.dart';
 import 'package:hive/hive.dart';
 
+import 'delivery_log.dart';
 import 'delivery_note_document.dart';
 
 part 'delivery_v2.g.dart';
@@ -62,7 +63,9 @@ class DeliveryV2 {
   @HiveField(23)
   String receiverContact;
   @HiveField(24)
-  List<DeliveryActivities> activities;
+  List<DeliveryActivity> activities;
+  @HiveField(25)
+  String receiverName;
   DeliveryV2(
       {this.id,
       this.tripId,
@@ -86,6 +89,7 @@ class DeliveryV2 {
       this.customerContact,
       this.receiverContact,
       this.activities,
+      this.receiverName,
       this.notes});
 
   factory DeliveryV2.fromMap(
@@ -93,67 +97,77 @@ class DeliveryV2 {
   ) {
     try {
       Map<String, dynamic> shop = json['shop'] ?? {};
-      // db.customerBean.upsert(Customer.fromMap(shop)
+      // Customer customer = Customer.fromMap(shop);
+      // db.customerBean.upsert(customer
       //   ..fromServer = true
       //   ..synced = true);
       String deliveryDocumentType =
           json['document_type'] != null ? json['document_type']['title'] : null;
       return DeliveryV2(
-        id: json['delivery_id'],
-        tripId: json['trip_id'],
-        deliveryDocumentTypeId: json['document_type_id'],
-        deliveryDocumentType: deliveryDocumentType,
-        shopId: json['shop_id'],
-        route: json['route'],
-        vehicleType: json['vehicle_type'],
-        natureOfGoods: json['nature_of_goods'],
-        deliveryDocumentRefrence: () {
-          bool showDeliveryItems =
-              json['document_type']['has_lines'] == 1 ? true : false;
-          switch (deliveryDocumentType.toLowerCase()) {
-            case 'delivery notes':
-              return DeliveryNoteDocument.fromMap(json['document_reference'],
-                  showDeliveryItems: showDeliveryItems);
-              break;
-            case 'invoices':
-              return InvoiceDeliveryDocument.fromMap(json['document_reference'],
-                  showDeliveryItems: showDeliveryItems);
-              break;
-            case 'delivery order':
-              return DeliveryTask.fromMap(json['document_reference'],
-                  showDeliveryItems: showDeliveryItems);
-              break;
-            default:
-              log("Unknown delivery document type $deliveryDocumentType");
-              return null;
-          }
-        }(),
-        items: json['delivery_items'] != null
-            ? List.from(json['delivery_items'])
-                .map((e) => DeliveryItem.fromJson(e))
-                .toList()
-            : [],
-        deliveryTime: json['delivery_time'] != null
-            ? DateTime.parse(json['delivery_time'])
-            : null,
-        notes: json['notes'],
-        shopName: shop['shop_name'],
-        shopLatitude:
-            shop['slatitude'] != null ? double.parse(shop['slatitude']) : null,
-        shopLongitude: shop['slongitude'] != null
-            ? double.parse(shop['slongitude'])
-            : null,
-        deliveryLocation: DeliveryLocationV2.fromMap(json['delivery_location']),
-        activities: List.from(json['activities'])
-            .map((e) => DeliveryActivities.fromJson(json))
-            .toList(),
-      );
+          id: json['delivery_id'],
+          tripId: json['trip_id'],
+          deliveryDocumentTypeId: json['document_type_id'],
+          deliveryDocumentType: deliveryDocumentType,
+          shopId: json['shop_id'],
+          route: json['route'],
+          vehicleType: json['vehicle_type'],
+          natureOfGoods: json['nature_of_goods'],
+          deliveryDocumentRefrence: () {
+            bool showDeliveryItems =
+                json['document_type']['has_lines'] == 1 ? true : false;
+            switch (deliveryDocumentType.toLowerCase()) {
+              case 'delivery notes':
+                return DeliveryNoteDocument.fromMap(json['document_reference'],
+                    showDeliveryItems: showDeliveryItems);
+                break;
+              case 'invoices':
+                return InvoiceDeliveryDocument.fromMap(
+                    json['document_reference'],
+                    showDeliveryItems: showDeliveryItems);
+                break;
+              case 'delivery order':
+                return DeliveryTask.fromMap(json['document_reference'],
+                    showDeliveryItems: showDeliveryItems);
+                break;
+              default:
+                log("Unknown delivery document type $deliveryDocumentType");
+                return null;
+            }
+          }(),
+          items: json['delivery_items'] != null
+              ? List.from(json['delivery_items'])
+                  .map((e) => DeliveryItem.fromJson(e))
+                  .toList()
+              : [],
+          deliveryTime: json['delivery_time'] != null
+              ? DateTime.parse(json['delivery_time'])
+              : null,
+          notes: json['notes'],
+          shopName: shop['shop_name'],
+          shopLatitude: shop['slatitude'] != null
+              ? double.parse(shop['slatitude'])
+              : null,
+          shopLongitude: shop['slongitude'] != null
+              ? double.parse(shop['slongitude'])
+              : null,
+          deliveryLocation:
+              DeliveryLocationV2.fromMap(json['delivery_location']),
+          activities: List.from(json['delivery_activities'] ?? [])
+              .map((activity) => DeliveryActivity.fromJson(activity))
+              .toList(),
+          receiverContact: json['recipient_phone_number'],
+          customerContact: "",
+          receiverName: json['recipient_name']);
     } catch (error) {
       throw FormatException("Error parsing delivery $error ", json);
     }
   }
 
   bool get delivered => deliveryTime != null;
+
+  // List<DeliveryLog> get deliveryLogs => deliveryLogService.deliveryLogs
+  //     .where((element) => element.deliveryId == id)
+  //     .toList();
 }
 
 enum DeliveryDocumentType { DELIVERY_NOTE, INVOICE, DELIVERY_TASK }

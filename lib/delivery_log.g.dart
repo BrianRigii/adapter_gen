@@ -21,17 +21,21 @@ class DeliveryLogAdapter extends TypeAdapter<DeliveryLog> {
       activityId: fields[1] as int,
       latitude: fields[2] as double,
       longitude: fields[3] as double,
-      imagePath: fields[4] as String,
+      imagePath: (fields[4] as List)?.cast<String>(),
       comments: fields[5] as String,
       id: fields[8] as int,
+      visitId: fields[9] as String,
+      tripId: fields[10] as int,
+      synced: fields[7] as bool,
+      priority: fields[11] as int,
       entryTime: fields[6] as DateTime,
-    )..synced = fields[7] as bool;
+    );
   }
 
   @override
   void write(BinaryWriter writer, DeliveryLog obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.deliveryId)
       ..writeByte(1)
@@ -49,7 +53,13 @@ class DeliveryLogAdapter extends TypeAdapter<DeliveryLog> {
       ..writeByte(7)
       ..write(obj.synced)
       ..writeByte(8)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(9)
+      ..write(obj.visitId)
+      ..writeByte(10)
+      ..write(obj.tripId)
+      ..writeByte(11)
+      ..write(obj.priority);
   }
 
   @override

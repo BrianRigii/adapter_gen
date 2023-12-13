@@ -6,17 +6,17 @@ part of 'delivery_activities.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DeliveryActivitiesAdapter extends TypeAdapter<DeliveryActivities> {
+class DeliveryActivityAdapter extends TypeAdapter<DeliveryActivity> {
   @override
   final int typeId = 154;
 
   @override
-  DeliveryActivities read(BinaryReader reader) {
+  DeliveryActivity read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DeliveryActivities(
+    return DeliveryActivity(
       id: fields[0] as int,
       title: fields[1] as String,
       description: fields[2] as String,
@@ -26,7 +26,7 @@ class DeliveryActivitiesAdapter extends TypeAdapter<DeliveryActivities> {
   }
 
   @override
-  void write(BinaryWriter writer, DeliveryActivities obj) {
+  void write(BinaryWriter writer, DeliveryActivity obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -47,7 +47,7 @@ class DeliveryActivitiesAdapter extends TypeAdapter<DeliveryActivities> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DeliveryActivitiesAdapter &&
+      other is DeliveryActivityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

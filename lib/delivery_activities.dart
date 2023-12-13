@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'delivery_activities.g.dart';
 
 @HiveType(typeId: 154)
-class DeliveryActivities {
+class DeliveryActivity {
   @HiveField(0)
   final int id;
   @HiveField(1)
@@ -15,12 +15,12 @@ class DeliveryActivities {
   @HiveField(4)
   final int priority;
 
-  DeliveryActivities(
+  DeliveryActivity(
       {this.id, this.title, this.description, this.slug, this.priority});
 
-  factory DeliveryActivities.fromJson(json) {
+  factory DeliveryActivity.fromJson(json) {
     try {
-      return DeliveryActivities(
+      return DeliveryActivity(
         id: json['id'],
         title: json['title'],
         description: json['description'],

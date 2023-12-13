@@ -38,6 +38,8 @@ class Trip {
   bool fromServer;
   @HiveField(15)
   String undeliveredDeliveries;
+  @HiveField(16)
+  String tripType;
 
   Trip(
       {this.id,
@@ -51,6 +53,7 @@ class Trip {
       this.startOdometer,
       this.endOdometer,
       this.dispatchTime,
+      this.tripType,
       this.deliveries});
 
   factory Trip.fromMap(Map<String, dynamic> json) {
