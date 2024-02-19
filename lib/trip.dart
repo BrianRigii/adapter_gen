@@ -1,3 +1,4 @@
+import 'package:adapter_gen/trip_status.dart';
 import 'package:hive/hive.dart';
 
 import 'delivery_v2.dart';
@@ -40,7 +41,8 @@ class Trip {
   String undeliveredDeliveries;
   @HiveField(16)
   String tripType;
-
+  @HiveField(17)
+  TripStatus status;
   Trip(
       {this.id,
       this.scheduledTime,
@@ -53,8 +55,9 @@ class Trip {
       this.startOdometer,
       this.endOdometer,
       this.dispatchTime,
-      this.tripType,
-      this.deliveries});
+      this.deliveries,
+      this.status,
+      this.tripType});
 
   factory Trip.fromMap(Map<String, dynamic> json) {
     try {
@@ -102,6 +105,7 @@ class Trip {
                 .map((delivery) => DeliveryV2.fromMap(delivery))
                 .toList()
             : [],
+        tripType: json["trip_type"],
       );
     } catch (error) {
       throw FormatException("Error parsing trip $error ", json);
@@ -125,6 +129,8 @@ class Trip {
   List<DeliveryV2> completedDeliveries() {
     return deliveries.where((delivery) => delivery.delivered).toList();
   }
+
+  bool get isService => tripType.toLowerCase() == "service";
 
   String timeIn() {
     if (dispatchTime != null) {
