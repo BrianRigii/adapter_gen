@@ -1,14 +1,15 @@
 import 'dart:developer';
 
 import 'package:adapter_gen/delivery_activities.dart';
-import 'package:adapter_gen/delivery_document.dart';
 import 'package:adapter_gen/delivery_location.dart';
-import 'package:adapter_gen/delivery_task.dart';
-import 'package:adapter_gen/invoice_delivery_document.dart';
 import 'package:hive/hive.dart';
 
-import 'delivery_log.dart';
+import 'delivery_document.dart';
+
 import 'delivery_note_document.dart';
+import 'delivery_price.dart';
+import 'delivery_task.dart';
+import 'invoice_delivery_document.dart';
 
 part 'delivery_v2.g.dart';
 
@@ -66,31 +67,71 @@ class DeliveryV2 {
   List<DeliveryActivity> activities;
   @HiveField(25)
   String receiverName;
-  DeliveryV2(
-      {this.id,
-      this.tripId,
-      this.visitId,
-      this.deliveryDocumentTypeId,
-      this.deliveryDocumentType,
-      this.shopId,
-      this.items,
-      this.deliveryDocumentRefrence,
-      this.deliveryTime,
-      this.imagePaths,
-      this.synced,
-      this.entryType,
-      this.shopName,
-      this.shopLatitude,
-      this.shopLongitude,
-      this.deliveryLocation,
-      this.vehicleType,
-      this.route,
-      this.natureOfGoods,
-      this.customerContact,
-      this.receiverContact,
-      this.activities,
-      this.receiverName,
-      this.notes});
+
+  @HiveField(26)
+  String paymentAmount;
+  @HiveField(27)
+  String paymentMethod;
+  @HiveField(28)
+  String status;
+  @HiveField(29)
+  String totalCost;
+  @HiveField(30)
+  String paymentType;
+  @HiveField(31)
+  int paymentMethodId;
+  @HiveField(32)
+  String paymentStatus;
+  @HiveField(33)
+  int paymentId;
+  @HiveField(34)
+  String paymentReference;
+  @HiveField(35)
+  int bankId;
+  @HiveField(36)
+  String maturityDate;
+  @HiveField(37)
+  String nextPaymentDate;
+  @HiveField(38)
+  String chequePhoto;
+
+  DeliveryV2({
+    this.id,
+    this.tripId,
+    this.visitId,
+    this.deliveryDocumentTypeId,
+    this.deliveryDocumentType,
+    this.shopId,
+    this.items,
+    this.deliveryDocumentRefrence,
+    this.deliveryTime,
+    this.imagePaths,
+    this.synced,
+    this.entryType,
+    this.shopName,
+    this.shopLatitude,
+    this.shopLongitude,
+    this.natureOfGoods,
+    this.vehicleType,
+    this.route,
+    this.notes,
+    this.paymentAmount,
+    this.paymentMethod,
+    this.paymentMethodId,
+    this.paymentStatus,
+    this.paymentId,
+    this.paymentReference,
+    this.bankId,
+    this.maturityDate,
+    this.nextPaymentDate,
+    this.chequePhoto,
+    this.receiverContact,
+    this.customerContact,
+    this.receiverName,
+    this.activities,
+    this.deliveryLocation,
+    this.status,
+  });
 
   factory DeliveryV2.fromMap(
     Map<String, dynamic> json,
@@ -125,7 +166,7 @@ class DeliveryV2 {
                     json['document_reference'],
                     showDeliveryItems: showDeliveryItems);
                 break;
-              case 'delivery order':
+              case 'delivery orders':
                 return DeliveryTask.fromMap(json['document_reference'],
                     showDeliveryItems: showDeliveryItems);
                 break;
@@ -142,7 +183,7 @@ class DeliveryV2 {
           deliveryTime: json['delivery_time'] != null
               ? DateTime.parse(json['delivery_time'])
               : null,
-          notes: json['notes'],
+          notes: json['delivery_notes'] ?? '',
           shopName: shop['shop_name'],
           shopLatitude: shop['slatitude'] != null
               ? double.parse(shop['slatitude'])
@@ -156,7 +197,7 @@ class DeliveryV2 {
               .map((activity) => DeliveryActivity.fromJson(activity))
               .toList(),
           receiverContact: json['recipient_phone_number'],
-          customerContact: "",
+          // customerContact: customer.shopPhoneno,
           receiverName: json['recipient_name']);
     } catch (error) {
       throw FormatException("Error parsing delivery $error ", json);
@@ -168,6 +209,12 @@ class DeliveryV2 {
   // List<DeliveryLog> get deliveryLogs => deliveryLogService.deliveryLogs
   //     .where((element) => element.deliveryId == id)
   //     .toList();
+
+  // bool get hasBeenPickedUp => deliveryLogs.any((element) =>
+  //     element.deliveryActivity.slug == DeliveryActivitySlug.PICKUP);
+
+  // bool get hasArrivedAtPort => deliveryLogs.any((element) =>
+  //     element.deliveryActivity.slug == DeliveryActivitySlug.ARRIVED_AT_PORT);
 }
 
 enum DeliveryDocumentType { DELIVERY_NOTE, INVOICE, DELIVERY_TASK }
@@ -198,48 +245,59 @@ class DeliveryItem {
   String deliveredPackagingKey;
   @HiveField(11)
   double sellingPrice;
+  @HiveField(12)
+  List<DeliveryPrice> prices;
+  @HiveField(13)
+  String selectedPrice;
 
-  DeliveryItem(
-      {this.id,
-      this.quantity,
-      this.productDesc,
-      this.productId,
-      this.packagingId,
-      this.deliveredQuantity,
-      this.deliveredQuatntityReason,
-      this.deliveryId,
-      this.deliveredPackagingId,
-      this.deliveredPackagingKey,
-      this.sellingPrice,
-      this.packageKey});
+  DeliveryItem({
+    this.id,
+    this.quantity,
+    this.productDesc,
+    this.productId,
+    this.packagingId,
+    this.deliveredQuantity,
+    this.deliveredQuatntityReason,
+    this.deliveryId,
+    this.deliveredPackagingId,
+    this.deliveredPackagingKey,
+    this.sellingPrice,
+    this.packageKey,
+    this.prices,
+    this.selectedPrice,
+  });
 
   factory DeliveryItem.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic> product = json['product'];
     Map<String, dynamic> packaging = json['packaging'];
     Map<String, dynamic> deliveredPackaging = json['delivered_packaging'];
+    List<dynamic> deliveryPrices = json["prices"] == null ? [] : json["prices"];
     try {
       return DeliveryItem(
-        id: json['delivery_item_id'],
-        quantity: json['quantity'] != null
-            ? double.parse(json['quantity'].toString())
-            : 0,
-        productDesc: product['product_desc'],
-        packagingId: packaging['id'],
-        packageKey: packaging['package_key'],
-        productId: product['product_id'],
-        deliveryId: json['delivery_id'],
-        deliveredQuantity: json['delivered_quantity'] != null
-            ? double.parse(json['delivered_quantity'].toString())
-            : null,
-        deliveredQuatntityReason: json['delivered_quantity_reason'],
-        sellingPrice: json['selling_price'] != null
-            ? double.parse(json['selling_price'].toString())
-            : 0,
-        deliveredPackagingId: json['delivered_packaging_id'],
-        deliveredPackagingKey: deliveredPackaging != null
-            ? deliveredPackaging['package_key']
-            : null,
-      );
+          id: json['delivery_item_id'],
+          quantity: json['quantity'] != null
+              ? double.parse(json['quantity'].toString())
+              : 0,
+          productDesc: product['product_desc'],
+          packagingId: packaging['id'],
+          packageKey: packaging['package_key'],
+          productId: product['product_id'],
+          deliveryId: json['delivery_id'],
+          deliveredQuantity: json['delivered_quantity'] != null
+              ? double.parse(json['delivered_quantity'].toString())
+              : null,
+          deliveredQuatntityReason: json['delivered_quantity_reason'],
+          sellingPrice: json['selling_price'] != null
+              ? double.parse(json['selling_price'].toString())
+              : 0,
+          deliveredPackagingId: json['delivered_packaging_id'],
+          deliveredPackagingKey: deliveredPackaging != null
+              ? deliveredPackaging['package_key']
+              : null,
+          prices: deliveryPrices
+                  .map((record) => DeliveryPrice.fromMap(record))
+                  .toList() ??
+              []);
     } catch (error) {
       throw FormatException('Error parsing delivery item $error', json);
     }
@@ -247,4 +305,9 @@ class DeliveryItem {
 
   bool get deliveringAsOrdered =>
       deliveredQuantity == quantity && deliveredPackagingId == packagingId;
+
+  @override
+  String toString() {
+    return 'DeliveryItem{deliveryId: $deliveryId, id: $id, quantity: $quantity, productDesc: $productDesc, productId: $productId, deliveredQuantity: $deliveredQuantity, deliveredQuatntityReason: $deliveredQuatntityReason, packagingId: $packagingId, packageKey: $packageKey, deliveredPackagingId: $deliveredPackagingId, deliveredPackagingKey: $deliveredPackagingKey, sellingPrice: $sellingPrice, prices: $prices}';
+  }
 }

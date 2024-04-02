@@ -32,24 +32,37 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       shopName: fields[15] as String,
       shopLatitude: fields[16] as double,
       shopLongitude: fields[17] as double,
-      deliveryLocation: fields[18] as DeliveryLocationV2,
+      natureOfGoods: fields[21] as String,
       vehicleType: fields[19] as String,
       route: fields[20] as String,
-      natureOfGoods: fields[21] as String,
-      customerContact: fields[22] as String,
-      receiverContact: fields[23] as String,
-      activities: (fields[24] as List)?.cast<DeliveryActivity>(),
-      receiverName: fields[25] as String,
       notes: fields[9] as String,
+      paymentAmount: fields[26] as String,
+      paymentMethod: fields[27] as String,
+      paymentMethodId: fields[31] as int,
+      paymentStatus: fields[32] as String,
+      paymentId: fields[33] as int,
+      paymentReference: fields[34] as String,
+      bankId: fields[35] as int,
+      maturityDate: fields[36] as String,
+      nextPaymentDate: fields[37] as String,
+      chequePhoto: fields[38] as String,
+      receiverContact: fields[23] as String,
+      customerContact: fields[22] as String,
+      receiverName: fields[25] as String,
+      activities: (fields[24] as List)?.cast<DeliveryActivity>(),
+      deliveryLocation: fields[18] as DeliveryLocationV2,
+      status: fields[28] as String,
     )
       ..deliveryLatitude = fields[11] as double
-      ..deliveryLongitude = fields[12] as double;
+      ..deliveryLongitude = fields[12] as double
+      ..totalCost = fields[29] as String
+      ..paymentType = fields[30] as String;
   }
 
   @override
   void write(BinaryWriter writer, DeliveryV2 obj) {
     writer
-      ..writeByte(26)
+      ..writeByte(39)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -101,7 +114,33 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       ..writeByte(24)
       ..write(obj.activities)
       ..writeByte(25)
-      ..write(obj.receiverName);
+      ..write(obj.receiverName)
+      ..writeByte(26)
+      ..write(obj.paymentAmount)
+      ..writeByte(27)
+      ..write(obj.paymentMethod)
+      ..writeByte(28)
+      ..write(obj.status)
+      ..writeByte(29)
+      ..write(obj.totalCost)
+      ..writeByte(30)
+      ..write(obj.paymentType)
+      ..writeByte(31)
+      ..write(obj.paymentMethodId)
+      ..writeByte(32)
+      ..write(obj.paymentStatus)
+      ..writeByte(33)
+      ..write(obj.paymentId)
+      ..writeByte(34)
+      ..write(obj.paymentReference)
+      ..writeByte(35)
+      ..write(obj.bankId)
+      ..writeByte(36)
+      ..write(obj.maturityDate)
+      ..writeByte(37)
+      ..write(obj.nextPaymentDate)
+      ..writeByte(38)
+      ..write(obj.chequePhoto);
   }
 
   @override
@@ -138,13 +177,15 @@ class DeliveryItemAdapter extends TypeAdapter<DeliveryItem> {
       deliveredPackagingKey: fields[10] as String,
       sellingPrice: fields[11] as double,
       packageKey: fields[8] as String,
+      prices: (fields[12] as List)?.cast<DeliveryPrice>(),
+      selectedPrice: fields[13] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, DeliveryItem obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.deliveryId)
       ..writeByte(1)
@@ -168,7 +209,11 @@ class DeliveryItemAdapter extends TypeAdapter<DeliveryItem> {
       ..writeByte(10)
       ..write(obj.deliveredPackagingKey)
       ..writeByte(11)
-      ..write(obj.sellingPrice);
+      ..write(obj.sellingPrice)
+      ..writeByte(12)
+      ..write(obj.prices)
+      ..writeByte(13)
+      ..write(obj.selectedPrice);
   }
 
   @override
