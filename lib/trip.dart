@@ -43,6 +43,8 @@ class Trip {
   String tripType;
   @HiveField(17)
   TripStatus status;
+  @HiveField(18)
+  DateTime scheduleTime;
   Trip(
       {this.id,
       this.scheduledTime,
@@ -57,6 +59,7 @@ class Trip {
       this.dispatchTime,
       this.deliveries,
       this.status,
+      this.scheduleTime,
       this.tripType});
 
   factory Trip.fromMap(Map<String, dynamic> json) {
@@ -81,32 +84,32 @@ class Trip {
       }
 
       return Trip(
-        id: tripId,
-        scheduledTime: json["scheduled_time"] != null
-            ? DateTime.parse(json["scheduled_time"])
-            : null,
-        releasedTime: json["released_time"] != null
-            ? DateTime.parse(json["released_time"])
-            : null,
-        dispatchLatitude: json["dispatch_latitude"],
-        dispatchLongitude: json["dispatch_longitude"],
-        dispatchTime: json["dispatch_time"] != null
-            ? DateTime.parse(json["dispatch_time"])
-            : null,
-        returnTime: json["return_time"] != null
-            ? DateTime.parse(json["return_time"])
-            : null,
-        returnLatitude: json["return_latitude"],
-        returnLongitude: json["return_longitude"],
-        startOdometer: startOdometer(),
-        endOdometer: endOdometer(),
-        deliveries: json["deliveries"] != null
-            ? List.from(json["deliveries"])
-                .map((delivery) => DeliveryV2.fromMap(delivery))
-                .toList()
-            : [],
-        tripType: json["trip_type"],
-      );
+          id: tripId,
+          scheduledTime: json["scheduled_time"] != null
+              ? DateTime.parse(json["scheduled_time"])
+              : null,
+          releasedTime: json["released_time"] != null
+              ? DateTime.parse(json["released_time"])
+              : null,
+          dispatchLatitude: json["dispatch_latitude"],
+          dispatchLongitude: json["dispatch_longitude"],
+          dispatchTime: json["dispatch_time"] != null
+              ? DateTime.parse(json["dispatch_time"])
+              : null,
+          returnTime: json["return_time"] != null
+              ? DateTime.parse(json["return_time"])
+              : null,
+          returnLatitude: json["return_latitude"],
+          returnLongitude: json["return_longitude"],
+          startOdometer: startOdometer(),
+          endOdometer: endOdometer(),
+          deliveries: json["deliveries"] != null
+              ? List.from(json["deliveries"])
+                  .map((delivery) => DeliveryV2.fromMap(delivery))
+                  .toList()
+              : [],
+          tripType: json["trip_type"],
+          status: tripStatusFromString(json['status']));
     } catch (error) {
       throw FormatException("Error parsing trip $error ", json);
     }
@@ -119,6 +122,13 @@ class Trip {
   bool get tripEnded => returnTime != null;
 
   bool get tripOngoing => tripStarted && !tripEnded;
+
+  // bool get canStartEndTrip =>
+  //     status == TripStatus.dispatched ||
+  //     status == TripStatus.onTransit ||
+  //     status == TripStatus.delivered;
+
+  // String get statusString => tripStatusToString(status);
 
   // String get formatedStartOdometer =>
   //     formatCurrency(startOdometer).split(".").first;
