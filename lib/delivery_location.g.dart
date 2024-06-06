@@ -8,7 +8,7 @@ part of 'delivery_location.dart';
 
 class DeliveryLocationV2Adapter extends TypeAdapter<DeliveryLocationV2> {
   @override
-  final int typeId = 151;
+  final int typeId = 196;
 
   @override
   DeliveryLocationV2 read(BinaryReader reader) {

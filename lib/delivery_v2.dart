@@ -13,7 +13,7 @@ import 'invoice_delivery_document.dart';
 
 part 'delivery_v2.g.dart';
 
-@HiveType(typeId: 123)
+@HiveType(typeId: 173)
 class DeliveryV2 {
   @HiveField(0)
   final int id;
@@ -67,7 +67,6 @@ class DeliveryV2 {
   List<DeliveryActivity> activities;
   @HiveField(25)
   String receiverName;
-
   @HiveField(26)
   String paymentAmount;
   @HiveField(27)
@@ -197,7 +196,7 @@ class DeliveryV2 {
               .map((activity) => DeliveryActivity.fromJson(activity))
               .toList(),
           receiverContact: json['recipient_phone_number'],
-          // customerContact: customer.shopPhoneno,
+          customerContact: "",
           receiverName: json['recipient_name']);
     } catch (error) {
       throw FormatException("Error parsing delivery $error ", json);
@@ -306,6 +305,7 @@ class DeliveryItem {
   bool get deliveringAsOrdered =>
       deliveredQuantity == quantity && deliveredPackagingId == packagingId;
 
+  // Product get product => commonsManager.productById(productId);
   @override
   String toString() {
     return 'DeliveryItem{deliveryId: $deliveryId, id: $id, quantity: $quantity, productDesc: $productDesc, productId: $productId, deliveredQuantity: $deliveredQuantity, deliveredQuatntityReason: $deliveredQuatntityReason, packagingId: $packagingId, packageKey: $packageKey, deliveredPackagingId: $deliveredPackagingId, deliveredPackagingKey: $deliveredPackagingKey, sellingPrice: $sellingPrice, prices: $prices}';

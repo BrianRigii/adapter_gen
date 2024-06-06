@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'delivery_location.g.dart';
 
-@HiveType(typeId: 151)
+@HiveType(typeId: 196)
 class DeliveryLocationV2 {
   @HiveField(0)
   final double shopLatitude;
@@ -48,9 +48,52 @@ class DeliveryLocationV2 {
 
   factory DeliveryLocationV2.fromMap(Map<String, dynamic> json) {
     try {
-      return DeliveryLocationV2();
+      return DeliveryLocationV2(
+        shopLatitude: json['shop_latitude'] != null
+            ? double.parse(json['shop_latitude'])
+            : null,
+        shopLongitude: json['shop_longitude'] != null
+            ? double.parse(json['shop_longitude'])
+            : null,
+        pickUpLocation: json['pickup_location'],
+        pickUpLatitude: json['pickup_latitude'] != null
+            ? double.parse(json['pickup_latitude'])
+            : null,
+        pickUpLongitude: json['pickup_longitude'] != null
+            ? double.parse(json['pickup_longitude'])
+            : null,
+        destination: json['destination'],
+        destinationLatitude: json['destination_latitude'] != null
+            ? double.parse(json['destination_latitude'])
+            : null,
+        destinationLongitude: json['destination_longitude'] != null
+            ? double.parse(json['destination_longitude'])
+            : null,
+        alternativeLocation: json['alternative_location'],
+        alternativeLatitude: json['alternative_latitude'] != null
+            ? double.parse(json['alternative_latitude'])
+            : null,
+        alternativeLongitude: json['alternative_longitude'] != null
+            ? double.parse(json['alternative_longitude'])
+            : null,
+        geofencePickUp: json['geofence_pickup'] == 1,
+        geofenceDestination: json['geofence_destination'] == 1,
+      );
     } catch (error) {
       throw FormatException("Error parsing delivery location $error ", json);
     }
   }
+
+  // LatLng get shopLatLng => shopLatitude == null || shopLongitude == null
+  //     ? null
+  //     : LatLng(shopLatitude, shopLongitude);
+
+  // LatLng get pickUpLatLng => pickUpLatitude == null || pickUpLongitude == null
+  //     ? null
+  //     : LatLng(pickUpLatitude, pickUpLongitude);
+
+  // LatLng get destinationLatLng =>
+  //     destinationLatitude == null || destinationLongitude == null
+  //         ? null
+  //         : LatLng(destinationLatitude, destinationLongitude);
 }

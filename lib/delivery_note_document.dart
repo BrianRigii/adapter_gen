@@ -14,7 +14,6 @@ class DeliveryNoteDocument extends DeliveryDocumentRefrence {
   final int saleOrderId;
   @HiveField(3)
   final String notes;
-  @override
   @HiveField(4)
   final String erpReference;
   @HiveField(5)
@@ -35,10 +34,9 @@ class DeliveryNoteDocument extends DeliveryDocumentRefrence {
       this.createdAt,
       this.totalValue})
       : super(
-          id: id,
-          showDeliveryItems: showDeliveryItems,
-          erpReference: erpReference,
-        );
+            id: id,
+            showDeliveryItems: showDeliveryItems,
+            erpReference: erpReference);
 
   factory DeliveryNoteDocument.fromMap(Map<String, dynamic> json,
       {bool showDeliveryItems}) {

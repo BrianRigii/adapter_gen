@@ -1,8 +1,7 @@
 import 'dart:developer';
 
+import 'package:adapter_gen/delivery_document.dart';
 import 'package:hive/hive.dart';
-
-import 'delivery_document.dart';
 
 part 'sale_order_delivery_document.g.dart';
 
