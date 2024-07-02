@@ -29,6 +29,13 @@ class TripAdapter extends TypeAdapter<Trip> {
       endOdometer: fields[9] as int,
       dispatchTime: fields[11] as DateTime,
       deliveries: (fields[10] as List)?.cast<DeliveryV2>(),
+      status: fields[22] as dynamic,
+      tripType: fields[16] as String,
+      firstReading: fields[21] as int,
+      secondReading: fields[17] as int,
+      endWeight: fields[19] as int,
+      endPhoto: fields[20] as String,
+      photo: fields[18] as String,
     )
       ..tripStartSynced = fields[12] as bool
       ..tripEndSynced = fields[13] as bool
@@ -39,7 +46,7 @@ class TripAdapter extends TypeAdapter<Trip> {
   @override
   void write(BinaryWriter writer, Trip obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(23)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -71,7 +78,21 @@ class TripAdapter extends TypeAdapter<Trip> {
       ..writeByte(14)
       ..write(obj.fromServer)
       ..writeByte(15)
-      ..write(obj.undeliveredDeliveries);
+      ..write(obj.undeliveredDeliveries)
+      ..writeByte(16)
+      ..write(obj.tripType)
+      ..writeByte(17)
+      ..write(obj.secondReading)
+      ..writeByte(18)
+      ..write(obj.photo)
+      ..writeByte(19)
+      ..write(obj.endWeight)
+      ..writeByte(20)
+      ..write(obj.endPhoto)
+      ..writeByte(21)
+      ..write(obj.firstReading)
+      ..writeByte(22)
+      ..write(obj.status);
   }
 
   @override
