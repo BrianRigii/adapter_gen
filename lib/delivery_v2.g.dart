@@ -52,17 +52,22 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       activities: (fields[24] as List)?.cast<DeliveryActivity>(),
       deliveryLocation: fields[18] as DeliveryLocationV2,
       status: fields[28] as String,
+      taxInvoiceNumber: fields[42] as String,
+      taxInvoiceQrCode: fields[41] as String,
+      taxVerificationCode: fields[40] as String,
+      signature: fields[39] as String,
+      deliveryLocationId: fields[43] as int,
+      logisticsDeliveryAddresses: (fields[44] as List)?.cast<dynamic>(),
     )
       ..deliveryLatitude = fields[11] as double
       ..deliveryLongitude = fields[12] as double
-      ..totalCost = fields[29] as String
       ..paymentType = fields[30] as String;
   }
 
   @override
   void write(BinaryWriter writer, DeliveryV2 obj) {
     writer
-      ..writeByte(39)
+      ..writeByte(44)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -121,8 +126,6 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       ..write(obj.paymentMethod)
       ..writeByte(28)
       ..write(obj.status)
-      ..writeByte(29)
-      ..write(obj.totalCost)
       ..writeByte(30)
       ..write(obj.paymentType)
       ..writeByte(31)
@@ -140,7 +143,19 @@ class DeliveryV2Adapter extends TypeAdapter<DeliveryV2> {
       ..writeByte(37)
       ..write(obj.nextPaymentDate)
       ..writeByte(38)
-      ..write(obj.chequePhoto);
+      ..write(obj.chequePhoto)
+      ..writeByte(39)
+      ..write(obj.signature)
+      ..writeByte(40)
+      ..write(obj.taxVerificationCode)
+      ..writeByte(41)
+      ..write(obj.taxInvoiceQrCode)
+      ..writeByte(42)
+      ..write(obj.taxInvoiceNumber)
+      ..writeByte(43)
+      ..write(obj.deliveryLocationId)
+      ..writeByte(44)
+      ..write(obj.logisticsDeliveryAddresses);
   }
 
   @override

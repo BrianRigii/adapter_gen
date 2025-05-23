@@ -29,7 +29,7 @@ class TripAdapter extends TypeAdapter<Trip> {
       endOdometer: fields[9] as int,
       dispatchTime: fields[11] as DateTime,
       deliveries: (fields[10] as List)?.cast<DeliveryV2>(),
-      status: fields[22] as dynamic,
+      status: fields[22] as TripStatus,
       tripType: fields[16] as String,
       firstReading: fields[21] as int,
       secondReading: fields[17] as int,
